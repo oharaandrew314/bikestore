@@ -1,0 +1,16 @@
+{
+  "name": "ts-lambda",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/handlers.tsc",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.3",
+    "serverless-offline": "^3.21.1",
+    "serverless-plugin-typescript": "^1.1.5"
+  }
+}
