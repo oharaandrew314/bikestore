@@ -1,16 +1,3 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: ts-lambda
 
 # You can pin your service to only deploy with a specific Serverless version
@@ -57,12 +44,24 @@ package:
   - node_modules/**/*
 
 functions:
-  hello:
-    handler: src/handlers.hello
+  bikes:
+    handler: src/bikesHandler.listAll
     events:
     - http:
-        path: hello
+        path: bikes
         method: get
+  getBike:
+    handler: src/bikesHandler.get
+    events:
+    - http:
+        path: bikes/{uuid}
+        method: get
+  newBike:
+    handler: src/bikesHandler.newBike
+    events:
+    - http:
+        path: bikes
+        method: post
 
 # you can add CloudFormation resource templates here
 #resources:
