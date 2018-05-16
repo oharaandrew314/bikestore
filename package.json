@@ -4,7 +4,7 @@
   "description": "",
   "main": "src/handlers.tsc",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts; npm run lint",
     "lint": "tslint \"src/**/*.ts\""
   },
   "engines": {
