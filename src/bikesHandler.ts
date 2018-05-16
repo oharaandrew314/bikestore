@@ -17,12 +17,12 @@ class JsonResponse implements Response {
 
 const repo: Repo = new InMemoryRepo()
 
-const listAll: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
+export const listAll: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
   const response: Response = new JsonResponse(200, repo.listAll())
   callback(undefined, response)
 };
 
-const get: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
+export const get: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
   const uuid: string = event.pathParameters!.uuid
   const bike: Bike | undefined = repo.get(uuid)
 
@@ -30,11 +30,9 @@ const get: Handler = (event: APIGatewayProxyEvent, context: Context, callback: C
   callback(undefined, response)
 }
 
-const newBike: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
+export const newBike: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
   const data: BikeData = JSON.parse(event.body!)
   const bike: Bike = repo.add(data)
   const response: Response = new JsonResponse(200, bike)
   callback(undefined, response)
 }
-
-export { listAll, get, newBike }
