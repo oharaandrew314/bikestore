@@ -1,6 +1,8 @@
 import { Handler, Context, Callback, APIGatewayProxyEvent } from 'aws-lambda'
 import { v4 as uuid4 } from 'uuid'
-import { Repo, InMemoryRepo, Bike, BikeData } from './repo'
+import Bike from './bike'
+import BikeData from './bikeData'
+import { Repo, InMemoryRepo } from './repo'
 
 interface Response {
   statusCode: number
