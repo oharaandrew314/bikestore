@@ -7,81 +7,48 @@ import { DynamoDB } from 'aws-sdk'
 import { DynamoRepo } from '../../src/repos/repo'
 import ClearableRepo from './clearableRepo'
 import { Bike, BikeData } from '../../src/models/bike'
+import DynamoDbLocal from 'dynamodb-local'
 
-describe('Empty InMemoryRepo', () => {
+describe('Empty DynamoRepo', () => {
 
-  const repo = new ClearableRepo(new DynamoRepo())
-  const tableName = `test-bikes-${uuid4()}`
-  const client = new DynamoDB({ region: 'us-east-1' })
-  const DynamoDbLocal = require('dynamodb-local')
   const dynamoLocalPort = 8000
+  const client = new DynamoDB({ region: 'us-east-1', endpoint: `http://localhost:${dynamoLocalPort}` })
+  const repo = new DynamoRepo(client, 'test-')
   let dynamo: any
 
   beforeEach(async () => {
-    process.env.BIKES_TABLE_NAME = tableName
-    dynamo = await DynamoDbLocal.launch(dynamoLocalPort, null, [], false, true)
-
-    // const params: DynamoDB.CreateTableInput = {
-    //   AttributeDefinitions: [
-    //     {
-    //       AttributeName: 'uuid',
-    //       AttributeType: 'S'
-    //     }
-    //   ],
-    //   KeySchema: [
-    //     {
-    //       AttributeName: 'uuid',
-    //       KeyType: 'HASH'
-    //     }
-    //   ],
-    //   ProvisionedThroughput: {
-    //     ReadCapacityUnits: 1,
-    //     WriteCapacityUnits: 1
-    //   },
-    //   TableName: tableName
-    // }
-    // await client.createTable(params).promise()
-    // setTimeout(() => { console.log('foo') }, 10000)
-    // await client.waitFor('tableExists', { TableName: tableName }).promise()
+    dynamo = await DynamoDbLocal.launch(dynamoLocalPort)
+    await repo.mapper.createTable(Bike, { readCapacityUnits: 5, writeCapacityUnits: 5 })
   })
 
   afterEach(async () => {
-    await DynamoDbLocal.stopChild(dynamo)
-    // const params: DynamoDB.DeleteTableInput = {
-    //   TableName: tableName
-    // }
-
-    // await client.deleteTable(params).promise()
+    await repo.mapper.deleteTable(Bike)
+    await DynamoDbLocal.stop(dynamo)
   })
 
-  it('foo', () => {
-    console.log('foo')
+  it('remove', async () => {
+    const result = await repo.remove('123')
+    expect(result).undefined
   })
 
-//   it('remove', async () => {
-//     const result = await repo.remove('123')
-//     expect(result).undefined
-//   })
+  it('add', async () => {
+    const result: Bike = await repo.add(new BikeData('Boone 7'))
+    expect(result.uuid).not.empty
+    expect(result.model).eq('Boone 7')
+  })
 
-//   it('add', async () => {
-//     const result = await repo.add(new BikeData('Boone 7'))
-//     expect(result.constructor.name).eq('Bike')
-//     expect(result.uuid).not.empty
-//     expect(result.model).eq('Boone 7')
-//   })
+  it('get', async () => {
+    const result = await repo.get('123')
+    expect(result).to.undefined
+  })
 
-//   it('get', async () => {
-//     const result = await repo.get('123')
-//     expect(result).to.undefined
-//   })
-
-//   it('list', async () => {
-//     const result = await repo.listAll()
-//     expect(result).to.eql(new Array<Bike>())
-//   })
+  it('list', async () => {
+    const result = await repo.listAll()
+    expect(result).to.eql(new Array<Bike>())
+  })
 })
 
-// describe('InMemoryRepo with bikes', () => {
+// describe('DynamoRepo with bikes', () => {
 
 //   const repo = new ClearableRepo(new DynamoRepo())
 //   let bike1: Bike

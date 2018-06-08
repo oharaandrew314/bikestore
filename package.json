@@ -1,10 +1,9 @@
 {
-  "name": "ts-lambda",
+  "name": "bikestore",
   "version": "1.0.0",
   "description": "",
-  "main": "src/handlers.tsc",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts; npm run lint",
+    "test": "mocha -r ts-node/register test/**/*.spec.ts --exit",
     "lint": "tslint src/**/*.ts"
   },
   "engines": {
@@ -19,7 +18,6 @@
     "@types/mocha": "^5.2.0",
     "chai": "^4.1.2",
     "dynamodb-local": "0.0.22",
-    "eslint-plugin-chai-friendly": "^0.4.1",
     "mocha": "^5.1.1",
     "serverless-offline": "^3.21.1",
     "serverless-plugin-typescript": "^1.1.5",

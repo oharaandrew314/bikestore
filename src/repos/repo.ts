@@ -44,15 +44,22 @@ export class InMemoryRepo implements Repo {
 
 export class DynamoRepo implements Repo {
 
-  private readonly mapper = new DataMapper({ client: new DynamoDB() })
+  readonly mapper: DataMapper
+
+  constructor (client: DynamoDB = new DynamoDB(), tableNamePrefix: string) {
+    this.mapper = new DataMapper({
+      client: client,
+      tableNamePrefix: tableNamePrefix
+    })
+  }
 
   async add (data: BikeData): Promise<Bike> {
     const bike = new Bike()
     bike.uuid = uuid4()
     bike.model = data.model
 
-    const result = await this.mapper.put({ item: bike })
-    return result.item
+    await this.mapper.put({ item: bike })
+    return bike
   }
 
   async remove (uuid: string): Promise<Bike | undefined> {
@@ -67,8 +74,12 @@ export class DynamoRepo implements Repo {
     const toFetch = new Bike()
     toFetch.uuid = uuid
 
-    const fetched = await this.mapper.get({ item: toFetch })
-    return fetched == null ? undefined : fetched.item
+    try {
+      const result = await this.mapper.get({ item: toFetch })
+      return result.item
+    } catch {
+      return undefined
+    }
   }
 
   async listAll (): Promise<Array<Bike>> {
