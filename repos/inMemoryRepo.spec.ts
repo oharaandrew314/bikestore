@@ -2,13 +2,12 @@
 
 import { expect } from 'chai'
 
-import { InMemoryRepo } from '../../src/repos/repo'
-import ClearableRepo from './clearableRepo'
-import { Bike, BikeData } from '../../src/models/bike'
+import InMemoryRepo from './inMemoryRepo'
+import { Bike, BikeData } from '../models/bike'
 
 describe('Empty InMemoryRepo', () => {
 
-  const repo = new ClearableRepo(new InMemoryRepo())
+  const repo = new InMemoryRepo()
 
   afterEach(() => {
     repo.clear()
@@ -39,7 +38,7 @@ describe('Empty InMemoryRepo', () => {
 
 describe('InMemoryRepo with bikes', () => {
 
-  const repo = new ClearableRepo(new InMemoryRepo())
+  const repo = new InMemoryRepo()
   let bike1: Bike
   let bike2: Bike
 

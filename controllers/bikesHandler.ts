@@ -1,8 +1,8 @@
 import { Handler, Context, Callback, APIGatewayProxyEvent } from 'aws-lambda'
 import { v4 as uuid4 } from 'uuid'
-import Bike from './bike'
-import BikeData from './bikeData'
-import { Repo, InMemoryRepo } from './repo'
+import { Bike, BikeData } from '../models/bike'
+import Repo from '../repos/repo'
+import InMemoryRepo from '../repos/inMemoryRepo'
 
 interface Response {
   statusCode: number
@@ -24,17 +24,16 @@ export const listAll: Handler = (event: APIGatewayProxyEvent, context: Context, 
   callback(undefined, response)
 }
 
-export const get: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
+export const get: Handler = async (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
   const uuid: string = event.pathParameters!.uuid
-  const bike: Bike | undefined = repo.get(uuid)
-
+  const bike: Bike | undefined = await repo.get(uuid)
   const response: Response = bike == null ? new JsonResponse(404, null) : new JsonResponse(200, bike)
   callback(undefined, response)
 }
 
-export const newBike: Handler = (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
+export const newBike: Handler = async (event: APIGatewayProxyEvent, context: Context, callback: Callback) => {
   const data: BikeData = JSON.parse(event.body!)
-  const bike: Bike = repo.add(data)
+  const bike: Bike = await repo.add(data)
   const response: Response = new JsonResponse(200, bike)
   callback(undefined, response)
 }

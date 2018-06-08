@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "mocha -r ts-node/register test/**/*.spec.ts --exit",
+    "test": "mocha -r ts-node/register **/*.spec.ts --exit",
     "lint": "tslint src/**/*.ts"
   },
   "engines": {
