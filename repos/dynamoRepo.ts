@@ -1,6 +1,6 @@
 import { v4 as uuid4 } from 'uuid'
-import { DynamoDB } from 'aws-sdk'
 import { DataMapper } from '@aws/dynamodb-data-mapper'
+const dynamodb = require('serverless-dynamodb-client')
 
 import { Bike, BikeData } from '../models/bike'
 import Repo from './repo'
@@ -9,9 +9,12 @@ export default class DynamoRepo implements Repo {
 
   readonly mapper: DataMapper
 
-  constructor (client: DynamoDB = new DynamoDB(), tableNamePrefix: string) {
+  constructor (tableNamePrefix: string) {
+    console.log('foo')
+    console.log(dynamodb.raw)
+
     this.mapper = new DataMapper({
-      client: client,
+      client: dynamodb.raw,
       tableNamePrefix: tableNamePrefix
     })
   }
@@ -49,6 +52,7 @@ export default class DynamoRepo implements Repo {
     for await (const item of result) {
       toReturn.push(item)
     }
+    console.log(toReturn)
     return toReturn
   }
 }

@@ -2,34 +2,48 @@ service: bikestore
 
 provider:
   name: aws
+  region: us-east-1
   runtime: nodejs8.10
+  iamManagedPolicies:
+  - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess # TODO restrict
 
 plugins:
   - serverless-plugin-typescript
+  - serverless-dynamodb-local
   - serverless-offline
 
-package:
-  include:
-  - src/
-  exclude:
-  - node_modules/**/*
-
 functions:
-  bikes:
-    handler: src/bikesHandler.listAll
+  list:
+    handler: controllers/bikesHandler.list
     events:
     - http:
         path: bikes
         method: get
-  getBike:
-    handler: src/bikesHandler.get
+  get:
+    handler: controllers/bikesHandler.get
     events:
     - http:
         path: bikes/{uuid}
         method: get
-  newBike:
-    handler: src/bikesHandler.newBike
+  create:
+    handler: controllers/bikesHandler.create
     events:
     - http:
         path: bikes
         method: post
+
+resources:
+  Resources:
+    bikesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: dev-bikes
+        AttributeDefinitions:
+          - AttributeName: uuid
+            AttributeType: S
+        KeySchema:
+          - AttributeName: uuid
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5

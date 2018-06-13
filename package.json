@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "test": "mocha -r ts-node/register **/*.spec.ts --exit",
-    "lint": "tslint src/**/*.ts"
+    "lint": "tslint src/**/*.ts",
+    "dynamodb": "serverless dynamodb start --migrate",
+    "offline": "serverless offline -r us-east-1"
   },
   "engines": {
     "node": "8.10",
@@ -19,6 +21,7 @@
     "chai": "^4.1.2",
     "dynamodb-local": "0.0.22",
     "mocha": "^5.1.1",
+    "serverless-dynamodb-local": "^0.2.30",
     "serverless-offline": "^3.21.1",
     "serverless-plugin-typescript": "^1.1.5",
     "ts-node": "^6.0.3",
@@ -32,6 +35,7 @@
     "@types/aws-sdk": "^2.7.0",
     "@types/uuid": "^3.4.3",
     "aws-sdk": "^2.240.1",
+    "serverless-dynamodb-client": "0.0.2",
     "uuid": "^3.2.1"
   }
 }
